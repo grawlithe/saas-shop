@@ -10,6 +10,8 @@ Route::get('/products/{product}', [ShopController::class, 'show'])->name('shop.s
 
 Route::middleware('auth')->group(function () {
     Route::post('/products/{product}/buy', [ShopController::class, 'buy'])->name('shop.buy');
+    Route::get('/checkout/success', [ShopController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel', [ShopController::class, 'cancel'])->name('checkout.cancel');
 
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('products', ProductController::class);
