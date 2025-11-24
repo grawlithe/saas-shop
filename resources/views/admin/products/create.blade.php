@@ -19,9 +19,9 @@
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <label for="price_cents" class="block text-sm font-medium text-gray-700">Price (Cents)</label>
-                            <input type="number" name="price_cents" id="price_cents" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('price_cents') }}" required>
-                            @error('price_cents')
+                            <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+                            <input type="number" name="price" id="price" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('price') }}" step="0.01" min="1" required>
+                            @error('price')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>

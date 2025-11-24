@@ -20,8 +20,15 @@
                             <div class="border rounded-lg p-4 shadow hover:shadow-lg transition">
                                 <h3 class="text-lg font-semibold">{{ $product->name }}</h3>
                                 <p class="text-gray-600 mt-2">${{ number_format($product->price_cents / 100, 2) }}</p>
-                                <div class="mt-4">
+                                <div class="mt-4 flex justify-between items-center">
                                     <a href="{{ route('shop.show', $product) }}" class="text-blue-500 hover:text-blue-700">View Details</a>
+                                    <form action="{{ route('cart.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm">
+                                            Add to Cart
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @endforeach

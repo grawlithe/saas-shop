@@ -1,22 +1,33 @@
 # SaaS Shop
 
-A full-featured e-commerce application built with Laravel 12, featuring an admin panel for product and order management, a customer-facing shop interface, and Stripe payment integration.
+A full-featured e-commerce application built with Laravel 12, featuring an admin panel for product and order management, a customer-facing shop interface with a shopping cart, and Stripe payment integration.
 
 ## Features
 
+### Account Types
+- **Customer**: Can browse products, manage cart, and place orders.
+- **Administrator**: Can manage products, users, and view all orders. Role-based access control ensures security.
+
 ### Customer Interface
 - **Browse Products**: View all available products in a responsive grid layout
-- **Product Details**: View detailed information about individual products with pricing
-- **Secure Checkout**: Purchase products via Stripe Checkout (requires authentication)
+- **Shopping Cart**:
+  - Add multiple products to cart
+  - Update quantities
+  - Remove items
+  - View total cost
+- **Secure Checkout**: Purchase multiple items via Stripe Checkout (requires authentication)
 - **Order Confirmation**: Receive confirmation after successful purchase
 
 ### Admin Panel
 - **Dashboard**: Centralized admin dashboard with navigation to all admin features
+- **User Management**:
+  - View all admin users
+  - Create new admin users (Invite-only system)
 - **Product Management**: 
-  - Create new products with name and price
+  - Create new products with name and price (Input in dollars, stored as cents)
   - Edit existing product details
   - Delete products from the catalog
-  - View all products in a paginated table
+  - View all products in a paginated table with formatted prices (e.g., $15.00)
 - **Order Management**: 
   - View all customer orders
   - See order details: ID, customer, status, total amount, items count, date
@@ -26,14 +37,15 @@ A full-featured e-commerce application built with Laravel 12, featuring an admin
 ### Payment Integration
 - **Stripe Checkout**: Secure payment processing via Laravel Cashier
 - **Payment Flow**:
-  - User clicks "Buy Now" → Redirected to Stripe hosted checkout
-  - Payment success → Order created with "paid" status
+  - User clicks "Checkout" from Cart → Redirected to Stripe hosted checkout
+  - Payment success → Order created with "paid" status and cart cleared
   - Payment cancelled → User returned to shop with no order created
 - **Test Mode Support**: Easily test with Stripe test API keys
 
 ### Authentication & Security
 - **Laravel Breeze**: Built-in authentication scaffolding
-- **Protected Routes**: Admin and checkout routes require authentication
+- **Protected Routes**: Admin, cart, and checkout routes require authentication
+- **Role-Based Access**: Middleware ensures only admins access admin routes
 - **Session Management**: Secure user sessions with password hashing
 
 ## Tech Stack
@@ -80,6 +92,7 @@ Configure your `.env` file with:
 ### 4. Database Setup
 ```bash
 php artisan migrate
+php artisan db:seed --class=AdminUserSeeder # Create default admin user
 ```
 
 ### 5. Run the Application
@@ -105,14 +118,14 @@ This project has comprehensive test coverage using Pest:
 php artisan test
 
 # Run specific test suite
-php artisan test --filter=ShopTest
-php artisan test --filter=Admin/ProductTest
+php artisan test --filter=CartTest
+php artisan test --filter=AdminTest
 ```
 
 **Test Coverage:**
 - ✓ Admin product CRUD operations
-- ✓ Admin order listing
-- ✓ Shop product browsing
+- ✓ Admin user management
+- ✓ Shopping cart functionality (Add, Update, Remove)
 - ✓ Checkout success/cancel flows
 - ✓ Authentication and authorization
 
@@ -120,45 +133,51 @@ php artisan test --filter=Admin/ProductTest
 
 ### Routes
 - `/` - Shop homepage (public)
-- `/products/{id}` - Product details (public)
+- `/cart` - Shopping cart (authenticated)
 - `/login` - User login
 - `/register` - User registration
-- `/admin/products` - Product management (authenticated)
-- `/admin/orders` - Order management (authenticated)
+- `/admin/products` - Product management (admin only)
+- `/admin/users` - Admin user management (admin only)
+- `/admin/orders` - Order management (admin only)
 - `/checkout/success` - Payment success handler
 - `/checkout/cancel` - Payment cancellation handler
 
 ### Key Files
 - **Controllers**: `app/Http/Controllers/`
   - `ShopController.php` - Customer shop and checkout
+  - `CartController.php` - Shopping cart management
   - `Admin/ProductController.php` - Product management
+  - `Admin/UserController.php` - Admin user management
   - `Admin/OrderController.php` - Order management
 - **Models**: `app/Models/`
   - `Product.php` - Product model
+  - `Cart.php` & `CartItem.php` - Shopping cart models
   - `Order.php` - Order model with product relationships
-  - `User.php` - User model with Billable trait
+  - `User.php` - User model with Billable trait and admin check
 - **Views**: `resources/views/`
   - `shop/` - Customer-facing views
+  - `cart/` - Shopping cart views
   - `admin/` - Admin panel views
 - **Tests**: `tests/Feature/`
+  - `CartTest.php`
+  - `AdminTest.php`
   - `ShopTest.php`
-  - `Admin/ProductTest.php`
-  - `Admin/OrderTest.php`
 
 ## Usage Guide
 
 ### For Customers
 1. Visit the shop homepage to browse products
-2. Click "View Details" to see product information
-3. Click "Buy Now" (login required)
-4. Complete payment via Stripe Checkout
-5. Receive order confirmation
+2. Click "Add to Cart" to add items
+3. Go to "Cart" to review items and update quantities
+4. Click "Checkout" (login required)
+5. Complete payment via Stripe Checkout
+6. Receive order confirmation
 
 ### For Administrators
 1. Login with admin credentials
-2. Navigate to "Products" to manage the catalog
-3. Navigate to "Orders" to view customer orders
-4. Create/edit/delete products as needed
+2. Navigate to "Products" to manage the catalog (Prices in $)
+3. Navigate to "Users" to manage admin access
+4. Navigate to "Orders" to view customer orders
 
 ## Development Notes
 
@@ -166,7 +185,7 @@ php artisan test --filter=Admin/ProductTest
 - **Laravel Conventions**: Follows Laravel 12 best practices
 - **Database**: Uses Eloquent ORM with proper relationships
 - **Migrations**: All database changes tracked in migrations
-- **Factories**: Product factory included for testing/seeding
+- **Factories**: Product and User factories included for testing/seeding
 
 ## License
 

@@ -13,9 +13,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success', [ShopController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancel', [ShopController::class, 'cancel'])->name('checkout.cancel');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
+    Route::patch('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/cart/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
+
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::resource('products', ProductController::class);
         Route::get('orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'create', 'store']);
     });
 
     Route::get('/dashboard', function () {

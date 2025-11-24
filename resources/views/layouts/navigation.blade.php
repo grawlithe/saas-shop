@@ -13,15 +13,23 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @auth
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                        {{ __('Products') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
-                        {{ __('Orders') }}
-                    </x-nav-link>
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
+                            {{ __('Cart') }}
+                        </x-nav-link>
+                        @if(Auth::user()->isAdmin())
+                            <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                                {{ __('Products') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                                {{ __('Orders') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                                {{ __('Users') }}
+                            </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>
@@ -87,12 +95,20 @@
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                    {{ __('Products') }}
+                <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
+                    {{ __('Cart') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
-                    {{ __('Orders') }}
-                </x-responsive-nav-link>
+                @if(Auth::user()->isAdmin())
+                    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                        {{ __('Products') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                        {{ __('Orders') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        {{ __('Users') }}
+                    </x-responsive-nav-link>
+                @endif
             @endauth
         </div>
 

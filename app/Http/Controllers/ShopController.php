@@ -49,29 +49,53 @@ class ShopController extends Controller
     {
         $sessionId = $request->get('session_id');
         $productId = $request->get('product_id');
+        $cartCheckout = $request->get('cart_checkout');
 
-        if (!$sessionId || !$productId) {
+        if (!$sessionId) {
             return redirect()->route('shop.index');
         }
 
-        // In a real app, verify the session with Stripe here.
-        // For now, we assume success if they hit this URL with a session ID.
-
-        $product = Product::findOrFail($productId);
         $user = Auth::user();
 
-        $order = Order::create([
-            'user_id' => $user->id,
-            'status' => 'paid',
-        ]);
+        if ($cartCheckout) {
+            $cart = $user->cart;
+            if ($cart && $cart->items->isNotEmpty()) {
+                $order = Order::create([
+                    'user_id' => $user->id,
+                    'status' => 'paid',
+                ]);
 
-        $order->products()->attach($product->id, [
-            'quantity' => 1,
-            'price_cents' => $product->price_cents,
-        ]);
+                foreach ($cart->items as $item) {
+                    $order->products()->attach($item->product_id, [
+                        'quantity' => $item->quantity,
+                        'price_cents' => $item->product->price_cents,
+                    ]);
+                }
 
-        return redirect()->route('shop.index')
-            ->with('status', 'Order placed successfully!');
+                $cart->items()->delete();
+                $cart->delete();
+
+                return redirect()->route('shop.index')
+                    ->with('status', 'Order placed successfully!');
+            }
+        } elseif ($productId) {
+            $product = Product::findOrFail($productId);
+
+            $order = Order::create([
+                'user_id' => $user->id,
+                'status' => 'paid',
+            ]);
+
+            $order->products()->attach($product->id, [
+                'quantity' => 1,
+                'price_cents' => $product->price_cents,
+            ]);
+
+            return redirect()->route('shop.index')
+                ->with('status', 'Order placed successfully!');
+        }
+
+        return redirect()->route('shop.index');
     }
 
     public function cancel()

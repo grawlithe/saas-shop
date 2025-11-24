@@ -24,7 +24,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (Cents)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price ($)</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -32,7 +32,7 @@
                             @foreach ($products as $product)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $product->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $product->price_cents }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">${{ number_format($product->price_cents / 100, 2) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
                                         <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
