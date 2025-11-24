@@ -25,7 +25,7 @@ test('admin can create product', function () {
 });
 
 test('admin can update product', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['is_admin' => true]);
     $product = Product::factory()->create();
 
     $response = $this->actingAs($user)->put(route('admin.products.update', $product), [
@@ -42,7 +42,7 @@ test('admin can update product', function () {
 });
 
 test('admin can delete product', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['is_admin' => true]);
     $product = Product::factory()->create();
 
     $response = $this->actingAs($user)->delete(route('admin.products.destroy', $product));
