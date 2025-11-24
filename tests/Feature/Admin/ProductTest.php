@@ -4,14 +4,14 @@ use App\Models\Product;
 use App\Models\User;
 
 test('admin can view product list', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['is_admin' => true]);
     $response = $this->actingAs($user)->get(route('admin.products.index'));
 
     $response->assertStatus(200);
 });
 
 test('admin can create product', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['is_admin' => true]);
     $response = $this->actingAs($user)->post(route('admin.products.store'), [
         'name' => 'New Product',
         'price_cents' => 1000,

@@ -5,7 +5,7 @@ use App\Models\Product;
 use App\Models\User;
 
 test('admin can view order list', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['is_admin' => true]);
     $order = Order::create([
         'user_id' => $user->id,
         'status' => 'pending',
