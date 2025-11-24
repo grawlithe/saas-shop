@@ -20,7 +20,7 @@ test('admin can create product', function () {
     $response->assertRedirect(route('admin.products.index'));
     $this->assertDatabaseHas('products', [
         'name' => 'New Product',
-        'price_cents' => 10,
+        'price_cents' => 1000,
     ]);
 });
 
@@ -37,7 +37,7 @@ test('admin can update product', function () {
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
         'name' => 'Updated Product',
-        'price_cents' => 20,
+        'price_cents' => 2000,
     ]);
 });
 
