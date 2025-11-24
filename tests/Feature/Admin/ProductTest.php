@@ -14,13 +14,13 @@ test('admin can create product', function () {
     $user = User::factory()->create(['is_admin' => true]);
     $response = $this->actingAs($user)->post(route('admin.products.store'), [
         'name' => 'New Product',
-        'price_cents' => 1000,
+        'price' => 10,
     ]);
 
     $response->assertRedirect(route('admin.products.index'));
     $this->assertDatabaseHas('products', [
         'name' => 'New Product',
-        'price_cents' => 1000,
+        'price' => 10,
     ]);
 });
 
@@ -30,14 +30,14 @@ test('admin can update product', function () {
 
     $response = $this->actingAs($user)->put(route('admin.products.update', $product), [
         'name' => 'Updated Product',
-        'price_cents' => 2000,
+        'price' => 20,
     ]);
 
     $response->assertRedirect(route('admin.products.index'));
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
         'name' => 'Updated Product',
-        'price_cents' => 2000,
+        'price' => 20,
     ]);
 });
 
